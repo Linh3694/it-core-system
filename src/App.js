@@ -1,24 +1,53 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import LoginPage from "./pages/LoginPage";
+import Dashboard from "./pages/Dashboard";
+import AdminPage from "./pages/AdminPage";
+import ProtectedRoute from "./components/ProtectedRoute";
+import ITProductCard from "./components/ITProductCard";
+import LaptopTable from "./components/LaptopTable";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <Routes>
+        {/* Trang Login */}
+        <Route path="/login" element={<LoginPage />} />
+
+        {/* Trang Admin */}
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute allowedRoles="admin">
+              <AdminPage />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Trang IT Product Card */}
+        <Route
+          path="/itproductcard/:id"
+          element={<ITProductCard />}
+        />
+
+        {/* Trang Laptop Table */}
+        <Route exact path="/" element={<LaptopTable />} />
+        
+        
+        {/* Trang Dashboard */}
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute allowedRoles={["user", "admin"]}>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Điều hướng mặc định */}
+        <Route path="*" element={<Navigate to="/login" />} />
+      </Routes>
+    </Router>
   );
 }
 
